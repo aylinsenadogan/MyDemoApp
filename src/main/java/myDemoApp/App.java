@@ -4,21 +4,105 @@
 package myDemoApp;
 
 import java.util.ArrayList;
+import static spark.Spark.get;
+import static spark.Spark.port;
+import static spark.Spark.post;
+
+import java.util.HashMap;
+import java.util.Map;
+import spark.ModelAndView;
+import spark.template.mustache.MustacheTemplateEngine;
 
 public class App {
-    public String getGreeting() {
-        return "Hello world.";
+    public static double StandartDeviation(ArrayList<Integer> array){
+        double average = 0;
+        double standartD = 0;
+        int size = array.size();
+        for(int i=0;i<size;i++){
+          average += array.get(i);
+        }
+        average = average/size;
+        for(int i=0;i<size;i++){
+          standartD += Math.pow(array.get(i)-average,2);
+        }
+        standartD = standartD/(size-1);
+        standartD = Math.sqrt(standartD);
+        return standartD;
     }
-    public static boolean search(ArrayList<Integer> array, int e) {
+    public static boolean range(ArrayList<Integer> array, int num1, int num2) {
         System.out.println("inside search");
         if (array == null) return false;
-  
-        for (int elt : array) {
-          if (elt == e) return true;
+        if (array.size() == 0) return false;
+        int max = num2;
+        int min = num1;
+        if(num1 > num2){
+          max=num1;
+          min=num2;
+        }
+        double StandartD = StandartDeviation(array);
+        if(StandartD < max && StandartD > min ){
+            return true;
         }
         return false;
     }
     public static void main(String[] args) {
-        System.out.println(new App().getGreeting());
+        port(getHerokuAssignedPort());
+
+        get("/", (req, res) -> "Enter the numbers for which you want to calculate the standard deviation, then enter two numbers to set the range. The program will return true if the standard deviation is within the range you have given, otherwise it will return false.");
+
+        post("/compute", (req, res) -> {
+          //System.out.println(req.queryParams("input1"));
+          //System.out.println(req.queryParams("input2"));
+
+          String input1 = req.queryParams("input1");
+          java.util.Scanner sc1 = new java.util.Scanner(input1);
+          sc1.useDelimiter("[;\r\n]+");
+          java.util.ArrayList<Integer> inputList = new java.util.ArrayList<>();
+          while (sc1.hasNext())
+          {
+            int value = Integer.parseInt(sc1.next().replaceAll("\\s",""));
+            inputList.add(value);
+          }
+          sc1.close();
+          System.out.println(inputList);
+
+
+          String input2 = req.queryParams("input2").replaceAll("\\s","");
+          int input2AsInt = Integer.parseInt(input2);
+
+          String input3 = req.queryParams("input3").replaceAll("\\s","");
+          int input3AsInt = Integer.parseInt(input3);
+
+          boolean tempResult = App.range(inputList,input2AsInt,input3AsInt);
+          double standartDeviation = App.StandartDeviation(inputList);
+
+          String result = "" + tempResult;
+          String standartDev = "" + standartDeviation;
+
+          Map<String, String> map = new HashMap<String, String>();
+          
+          map.put("result", result);
+          map.put("standartDev", standartDev);
+
+          return new ModelAndView(map, "compute.mustache");
+        }, new MustacheTemplateEngine());
+        get("/compute",
+            (rq, rs) -> {
+              Map<String, String> map = new HashMap<String, String>();
+              map.put("result", "not computed yet!");
+              return new ModelAndView(map, "compute.mustache");
+            },
+            new MustacheTemplateEngine());
     }
-}
+
+    static int getHerokuAssignedPort() {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        if (processBuilder.environment().get("PORT") != null) {
+            return Integer.parseInt(processBuilder.environment().get("PORT"));
+        }
+        return 4567; //return default port if heroku-port isn't set (i.e. on localhost)
+    }
+
+
+ }
+
