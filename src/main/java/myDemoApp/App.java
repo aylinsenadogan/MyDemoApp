@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import static spark.Spark.get;
 import static spark.Spark.port;
 import static spark.Spark.post;
-
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.util.HashMap;
 import java.util.Map;
 import spark.ModelAndView;
@@ -47,6 +48,11 @@ public class App {
     }
     public static void main(String[] args) {
         port(getHerokuAssignedPort());
+        Logger logger = LogManager.getLogger(App.class);
+
+        int port = Integer.parseInt(System.getenv("PORT"));
+        port(port);
+        logger.error("Current port number:" + port);
 
         get("/", (req, res) -> "Enter the numbers for which you want to calculate the standard deviation, then enter two numbers to set the range. The program will return true if the standard deviation is within the range you have given, otherwise it will return false.");
 
