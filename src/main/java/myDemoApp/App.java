@@ -31,7 +31,6 @@ public class App {
         return standartD;
     }
     public static boolean range(ArrayList<Integer> array, int num1, int num2) {
-        System.out.println("inside search");
         if (array == null) return false;
         if (array.size() == 0) return false;
         int max = num2;
@@ -95,6 +94,7 @@ public class App {
         get("/compute",
             (rq, rs) -> {
               Map<String, String> map = new HashMap<String, String>();
+              map.put("standartDev", "not computed yet!");
               map.put("result", "not computed yet!");
               return new ModelAndView(map, "compute.mustache");
             },
