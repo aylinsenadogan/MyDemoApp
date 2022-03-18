@@ -2,4 +2,4 @@ I learned how to use gradle, mustache, heroku and circleci in this project. I al
 
 [![aylinsenadogan](https://circleci.com/gh/aylinsenadogan/MyDemoApp.svg?style=svg)](https://app.circleci.com/pipelines/github/aylinsenadogan)
 
-Heroku site: https://arcane-bayou-51999.herokuapp.com
+Heroku site: https://arcane-bayou-51999.herokuapp.com/compute
