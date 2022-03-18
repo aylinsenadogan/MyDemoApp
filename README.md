@@ -1,4 +1,4 @@
 
-[![aylinsenadogan](https://circleci.com/gh/aylinsenadogan/myDemoApp.svg?style=svg)](https://app.circleci.com/pipelines/github/aylinsenadogan)
+[![aylinsenadogan](https://circleci.com/gh/aylinsenadogan/MyDemoApp.svg?style=svg)](https://app.circleci.com/pipelines/github/aylinsenadogan)
 
 Heroku site: https://arcane-bayou-51999.herokuapp.com
